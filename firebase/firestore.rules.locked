@@ -1,0 +1,15 @@
+// LOCKED RULES - paste into Firebase Console -> Firestore Database -> Rules   (DB-1 main project, DB-2 history project, DB-3 chat project)
+//
+// After the app uses the load balancer API, the phones must NOT touch Firestore any more.
+// Our servers and the admin panel use the Firebase ADMIN SDK, which ignores these rules - so they keep working.
+// Firebase Authentication (login / signup / Google) is a different product and is not affected.
+//
+// Publish this ONLY AFTER the new app version is live (older cached app versions that still talk to Firestore stop working).
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

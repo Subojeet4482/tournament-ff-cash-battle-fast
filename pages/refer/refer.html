@@ -1,0 +1,33 @@
+<!-- REFER & EARN + SCRATCH CARD -->
+<div id="modal-refer" class="modal-wrap">
+    <div class="modal-overlay" onclick="ui.closeModal()"></div>
+    <div class="modal-sheet ref-sheet">
+        <div class="sheet-handle"></div>
+        <div id="ref-body"><div class="ref-loading"><i class="fa-solid fa-gift fa-bounce"></i><span>Loading your rewards…</span></div></div>
+    </div>
+</div>
+
+<div id="sc-wrap" class="sc-wrap" aria-hidden="true">
+    <div class="sc-bg" onclick="refer.closeCard()"></div>
+    <div class="sc-box">
+        <button class="sc-x" onclick="refer.closeCard()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        <div class="sc-badge"><i class="fa-solid fa-gift"></i> Referral reward</div>
+        <h3 class="sc-title" id="sc-title">Scratch &amp; Win!</h3>
+        <p class="sc-sub" id="sc-sub">Rub the golden card with your finger</p>
+        <div class="sc-sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="sc-card" id="sc-card">
+            <div class="sc-prize" id="sc-prize">
+                <div class="sc-rays"></div>
+                <div class="sc-won" id="sc-won">YOU WON</div>
+                <div class="sc-amt"><span class="sc-rs">₹</span><span id="sc-amt">?</span></div>
+                <div class="sc-note" id="sc-note"><i class="fa-solid fa-circle-check"></i> Added to your wallet</div>
+            </div>
+            <canvas id="sc-cv"></canvas>
+            <div class="sc-shine"></div>
+            <div class="sc-hint" id="sc-hint"><i class="fa-solid fa-hand-pointer"></i><span>Scratch here</span></div>
+        </div>
+        <button class="sc-skip" id="sc-skip" onclick="refer.revealNow()">Reveal now</button>
+        <button class="btn-main sc-done" id="sc-done" onclick="refer.closeCard()">Awesome! <i class="fa-solid fa-check"></i></button>
+    </div>
+    <canvas id="sc-fx" class="sc-fx"></canvas>
+</div>
