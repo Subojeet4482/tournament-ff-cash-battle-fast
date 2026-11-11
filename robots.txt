@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ffcashbattle.in/sitemap.xml
+
+# AI-readable site summary: https://ffcashbattle.in/llms.txt
