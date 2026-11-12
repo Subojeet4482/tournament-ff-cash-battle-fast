@@ -4,7 +4,7 @@
  *  - one account can use a code only once (redeems/{uid} is create-only), 5 wrong tries => locked 24h
  *  - the amount comes from the code's pre-shuffled pool (fixed or random) — it is enforced by the SERVER (POST /wallet/gift/redeem)
  */
-import { api } from '../../js/core/api.js?v=41f223a8d8';
+import { api } from '../../js/core/api.js?v=2d72097ddc';
 
 const $ = (id) => document.getElementById(id);
 const MAXTRY = 5, LOCK_MS = 24 * 3600 * 1000;

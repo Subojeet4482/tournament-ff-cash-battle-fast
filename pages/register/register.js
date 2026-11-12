@@ -5,8 +5,8 @@
  *  - not verified in 60s  -> Firebase account is deleted (nothing is kept)
  * Nothing is saved to Firestore before verification.
  */
-import { createUserWithEmailAndPassword, updateProfile, signOut, deleteUser, authService } from '../../js/core/firebase.js?v=41f223a8d8';
-import { api } from '../../js/core/api.js?v=41f223a8d8';
+import { createUserWithEmailAndPassword, updateProfile, signOut, deleteUser, authService } from '../../js/core/firebase.js?v=2d72097ddc';
+import { api } from '../../js/core/api.js?v=2d72097ddc';
 
 const WINDOW_MS = 60000;          // time allowed to verify
 const PKEY = 'pending_reg';       // { uid, name, phone, email, ts } (the password is never stored)

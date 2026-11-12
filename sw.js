@@ -2,7 +2,7 @@
    1) shows message notifications and opens the right chat when tapped
    2) caches the VERSIONED js/css (?v=hash) cache-first and images stale-while-revalidate -> repeat visits are instant.
    index.html and html pages are never cached here, so a new deploy is picked up immediately. */
-const STATIC = 'ffcb-static-41f223a8d8';   // build.py replaces this with the build hash
+const STATIC = 'ffcb-static-2d72097ddc';   // build.py replaces this with the build hash
 const ASSETS = 'ffcb-assets';
 
 self.addEventListener('install', () => self.skipWaiting());

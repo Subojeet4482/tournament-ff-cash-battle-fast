@@ -4,7 +4,7 @@
  * window.vfy.name(name, uid) -> the name in the pink/purple gradient + glowing blue tick (same look as in chat), or the plain escaped name.
  * Works in the leaderboard, match roster, games and chat. Last known list is cached so it shows instantly on the next visit.
  */
-import { api } from './api.js?v=41f223a8d8';
+import { api } from './api.js?v=2d72097ddc';
 
 const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 let SET = new Set(), unsub = null, timer = null;

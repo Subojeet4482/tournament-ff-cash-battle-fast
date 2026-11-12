@@ -7,9 +7,9 @@
  *     so it survives after the server deletes the message.
  * Everything talks to chat.js only through its HK hooks + window.chat, so the old code stays small.
  */
-import * as core from './chat.js?v=41f223a8d8';
-import { onAuthStateChanged, authService } from '../../js/core/firebase.js?v=41f223a8d8';
-import { api } from '../../js/core/api.js?v=41f223a8d8';
+import * as core from './chat.js?v=2d72097ddc';
+import { onAuthStateChanged, authService } from '../../js/core/firebase.js?v=2d72097ddc';
+import { api } from '../../js/core/api.js?v=2d72097ddc';
 
 const { S, HK, esc, ttlMs, alive, friendName, pathOf, sheet, sheetClose, ask, toast, EDIT_MS } = core;
 const $ = (id) => document.getElementById(id);

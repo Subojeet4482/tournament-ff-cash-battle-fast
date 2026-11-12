@@ -3,12 +3,12 @@
  * 1) Inject all HTML fragments (pages / components / modals)
  * 2) Load every JS module (js/modules.js)
  */
-import { loadIncludes } from './core/include.js?v=41f223a8d8';
+import { loadIncludes } from './core/include.js?v=2d72097ddc';
 
 (async () => {
     try {
         await loadIncludes(document.body);
-        await import('./modules.js?v=41f223a8d8');
+        await import('./modules.js?v=2d72097ddc');
     } catch (err) {
         console.error(err);
         const isFile = location.protocol === 'file:';

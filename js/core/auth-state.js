@@ -1,8 +1,8 @@
 /**
  * Reacts to Firebase login/logout: loads user data, toggles drawer + header state.
  */
-import { onAuthStateChanged, signOut, authService } from './firebase.js?v=41f223a8d8';
-import { api } from './api.js?v=41f223a8d8';
+import { onAuthStateChanged, signOut, authService } from './firebase.js?v=2d72097ddc';
+import { api } from './api.js?v=2d72097ddc';
 
 onAuthStateChanged(authService, async (user) => {
     if(user && window.auth._needsVerify && window.auth._needsVerify(user)){

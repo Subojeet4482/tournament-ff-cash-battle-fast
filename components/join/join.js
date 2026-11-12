@@ -1,7 +1,7 @@
 /**
  * Join-match flow: UID check, slot grid, confirm.
  */
-import { api } from '../../js/core/api.js?v=41f223a8d8';
+import { api } from '../../js/core/api.js?v=2d72097ddc';
 
 Object.assign(window.app, {
     // fresh match + the roster (names / slots of everybody) for the slot grid

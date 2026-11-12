@@ -1,7 +1,7 @@
 /**
  * Fair Play Rules popup: loads config/rules (set from the admin panel), up to 3 language buttons.
  */
-import { api } from '../../js/core/api.js?v=41f223a8d8';
+import { api } from '../../js/core/api.js?v=2d72097ddc';
 
 const DEFAULT = [{ code: 'en', label: 'English', items: [
     'No Emulators Allowed (Mobile Only).', 'No Hacks, Scripts, or Team-ups.', 'Level 25+ ID Required.',

@@ -1,7 +1,7 @@
 /**
  * Login / logout / forgot-password + auth modal show/hide.
  */
-import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, sendEmailVerification, authService } from '../../js/core/firebase.js?v=41f223a8d8';
+import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, sendEmailVerification, authService } from '../../js/core/firebase.js?v=2d72097ddc';
 
 // Only email/password accounts created AFTER this date must verify (older users are not locked out).
 // Set this to 0 to force everyone to verify.

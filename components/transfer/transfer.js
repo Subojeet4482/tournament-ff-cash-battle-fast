@@ -1,7 +1,7 @@
 /**
  * Transfer money: recipient verify + send.
  */
-import { api } from '../../js/core/api.js?v=41f223a8d8';
+import { api } from '../../js/core/api.js?v=2d72097ddc';
 
 Object.assign(window.app, {
     verifyRecipient: async (pid) => {
