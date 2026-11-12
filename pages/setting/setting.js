@@ -1,8 +1,8 @@
 /**
  * Settings: dark mode, AI mode, sounds, gear, profile + payment settings, support contacts.
  */
-import { updateProfile, EmailAuthProvider, linkWithCredential, sendPasswordResetEmail, authService } from '../../js/core/firebase.js?v=fe39312af5';
-import { api } from '../../js/core/api.js?v=fe39312af5';
+import { updateProfile, EmailAuthProvider, linkWithCredential, sendPasswordResetEmail, authService } from '../../js/core/firebase.js?v=41f223a8d8';
+import { api } from '../../js/core/api.js?v=41f223a8d8';
 
 Object.assign(window.app, {
     // Theme switch: new theme spreads like a circle from the toggle button over the whole screen (dark -> light AND light -> dark)

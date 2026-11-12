@@ -4,7 +4,7 @@
  *   geo.needsState                ->  asks the user to choose his state once (POST /user/state)
  * Free matches and free games keep working. The server also refuses paid actions, so hiding the button is only the polite part.
  */
-import { api } from './api.js?v=fe39312af5';
+import { api } from './api.js?v=41f223a8d8';
 
 const DEFAULT_MSG = 'Aapki safety ke liye aapke state me payment system hide hai. Aap free matches join kar sakte ho.';
 

@@ -1,8 +1,8 @@
 /**
  * Session UX: animated logout (confirm sheet -> goodbye overlay) and welcome chip after login / sign-up.
  */
-import { signOut, authService } from '../../js/core/firebase.js?v=fe39312af5';
-import { api } from '../../js/core/api.js?v=fe39312af5';
+import { signOut, authService } from '../../js/core/firebase.js?v=41f223a8d8';
+import { api } from '../../js/core/api.js?v=41f223a8d8';
 
 const $ = (id) => document.getElementById(id);
 const wait = (ms) => new Promise(r => setTimeout(r, ms));

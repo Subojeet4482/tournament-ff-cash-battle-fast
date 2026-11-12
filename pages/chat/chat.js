@@ -5,8 +5,8 @@
  *   /chat/messages        every 2 s for the open conversation (new messages), full refresh every ~16 s (edits / deletes)
  * The server owns every rule (limits, blocks, slow mode, 10-minute edit window, private profiles).
  */
-import { authService } from '../../js/core/firebase.js?v=fe39312af5';
-import { api } from '../../js/core/api.js?v=fe39312af5';
+import { authService } from '../../js/core/firebase.js?v=41f223a8d8';
+import { api } from '../../js/core/api.js?v=41f223a8d8';
 const CHAT_TTL_HOURS = 24;
 
 export const MAX_FRIENDS = 20, EDIT_MS = 10 * 60 * 1000;

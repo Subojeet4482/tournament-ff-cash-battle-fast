@@ -5,7 +5,7 @@
  *   /matches          every 15 s -> room id / password, result, kills, player count    (+ room / winner toasts)
  * Polling pauses while the tab is hidden and runs at once when the user comes back. Errors slow it down (max 60 s).
  */
-import { api } from './api.js?v=fe39312af5';
+import { api } from './api.js?v=41f223a8d8';
 
 window.live = (function () {
     let uid = null, stopped = true, loops = [];

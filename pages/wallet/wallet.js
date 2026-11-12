@@ -1,7 +1,7 @@
 /**
  * Wallet page: balance card + transactions.
  */
-import { api } from '../../js/core/api.js?v=fe39312af5';
+import { api } from '../../js/core/api.js?v=41f223a8d8';
 
 Object.assign(window.app, {
     renderWallet: () => {

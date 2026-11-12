@@ -2,7 +2,7 @@
  * Refer & Earn + Scratch cards — app side. All money / rules run on the server (Server-1, /ref/*, file modules/ref_mod.py, through the load balancer).
  * This file shows the page, the scratch card (canvas) and the FAQ; the amount a card holds is decided by the SERVER when you start scratching.
  */
-import { api as LB } from '../../js/core/api.js?v=fe39312af5';
+import { api as LB } from '../../js/core/api.js?v=41f223a8d8';
 
 const $ = (id) => document.getElementById(id);
 const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

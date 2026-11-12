@@ -3,8 +3,8 @@
  * (Server-3 through the load balancer: /game/ball/* and /game/bomb/*) runs all rules & money. This file only gives those pages what they need
  * (session, wallet balance, live game updates by polling, deposit / close buttons) through window.ballBridge / window.bombBridge.
  */
-import { authService } from '../../js/core/firebase.js?v=fe39312af5';
-import { api as lb } from '../../js/core/api.js?v=fe39312af5';
+import { authService } from '../../js/core/firebase.js?v=41f223a8d8';
+import { api as lb } from '../../js/core/api.js?v=41f223a8d8';
 
 const $ = (id) => document.getElementById(id);
 let skew = 0;

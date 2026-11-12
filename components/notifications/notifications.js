@@ -1,7 +1,7 @@
 /**
  * Notifications modal: fetch, clear (animated), claim cash.
  */
-import { api } from '../../js/core/api.js?v=fe39312af5';
+import { api } from '../../js/core/api.js?v=41f223a8d8';
 
 const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = (id) => document.getElementById(id);

@@ -26,5 +26,5 @@ export const CHAT_TOKEN_URL = "";
  * The domain of this site must be added in the bot, otherwise every request is rejected (403 domain_not_verified).
  */
 export const LB_URL = "https://lb-server-tournament.onrender.com";
-export const SITE_KEY = "";          // <<< FILL: sk_xxxxxxxx  (from the Telegram bot)
+export const SITE_KEY = "sk_28YIYtATWoM445PwFo2PTcESEz91qOzI";
 export const CHAT_TTL_HOURS = 24;

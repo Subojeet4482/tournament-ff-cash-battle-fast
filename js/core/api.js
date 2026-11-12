@@ -5,8 +5,8 @@
  * Every call sends:  X-Site-Key (your domain's key) + Authorization: Bearer <session token> + X-Device-FP (device fingerprint).
  * When the 1-hour token ends the client silently logs in again with a fresh Firebase ID token and repeats the call once.
  */
-import { authService } from './firebase.js?v=fe39312af5';
-import { LB_URL, SITE_KEY } from './app-config.js?v=fe39312af5';
+import { authService } from './firebase.js?v=41f223a8d8';
+import { LB_URL, SITE_KEY } from './app-config.js?v=41f223a8d8';
 
 export class ApiError extends Error {
     constructor(status, code, message, data) { super(message || 'Something went wrong'); this.status = status; this.code = code || ''; this.data = data || {}; }

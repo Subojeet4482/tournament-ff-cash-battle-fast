@@ -4,7 +4,7 @@
  * Only the in-app username is shown (never the Free Fire UID / game name of other people).
  */
 const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-import { api } from '../../js/core/api.js?v=fe39312af5';
+import { api } from '../../js/core/api.js?v=41f223a8d8';
 let openId = null;
 const cache = {};          // matchId -> [{appName, slots, uid(for me)}]
 

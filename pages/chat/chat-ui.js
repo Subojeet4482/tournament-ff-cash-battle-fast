@@ -1,5 +1,5 @@
 /** Chat views: landing card, full-screen app (Chat / Profile / Game / Search), history sheet, conversation rendering. */
-import * as core from './chat.js?v=fe39312af5';
+import * as core from './chat.js?v=41f223a8d8';
 const { S, esc, avatar, chatId, fmtTime, fmtAgo, friendName, isFriend, isBlocked, getProf, sheet, MAX_FRIENDS, EDIT_MS, ttlMs, vName } = core;
 const ttlBanner = () => (core.S.th && core.S.th.kind === 'dm')
     ? `<div class="ct-ttl"><i class="fa-solid fa-floppy-disk"></i><span>This chat stays <b>on your device</b>. The server copy is removed every <b>7 days</b> — use <b>⋮ → Backup chats</b> to keep a file.</span></div>`
