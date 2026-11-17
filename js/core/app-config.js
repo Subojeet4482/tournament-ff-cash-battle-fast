@@ -22,9 +22,7 @@ export const CHAT_TOKEN_URL = "";
 /**
  * LOAD BALANCER API  -  the ONLY backend the app talks to (besides Firebase Auth for login / signup / Google).
  *   LB_URL   : your load balancer, e.g. "https://ff-load-balancer.onrender.com"
- *   SITE_KEY : the key the Telegram bot shows when you add THIS website's domain (bot -> Domains -> Add domain).
  * The domain of this site must be added in the bot, otherwise every request is rejected (403 domain_not_verified).
  */
-export const LB_URL = "https://lb-server-tournament.onrender.com";
-export const SITE_KEY = "sk_uwj0yYpm8cs_nNA3jDffM5lzO9bfuzom";
+export const LB_URL = "";            // <<< FILL: https://YOUR-LOAD-BALANCER.onrender.com
 export const CHAT_TTL_HOURS = 24;

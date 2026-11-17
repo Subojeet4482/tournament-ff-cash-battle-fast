@@ -1,8 +1,8 @@
 /**
  * Reacts to Firebase login/logout: loads user data, toggles drawer + header state.
  */
-import { onAuthStateChanged, signOut, authService } from './firebase.js?v=2d72097ddc';
-import { api } from './api.js?v=2d72097ddc';
+import { onAuthStateChanged, signOut, authService } from './firebase.js?v=684982f88b';
+import { api } from './api.js?v=684982f88b';
 
 onAuthStateChanged(authService, async (user) => {
     if(user && window.auth._needsVerify && window.auth._needsVerify(user)){
@@ -27,6 +27,7 @@ onAuthStateChanged(authService, async (user) => {
         if(!user) return;
         if(lr && lr.geo && window.app.applyGeo) window.app.applyGeo(lr.geo);
         if(window.vfy) window.vfy.start();
+        if(window.badwords) window.badwords.start();
         if(window.live) window.live.start(user.uid);   // start the polling loops in parallel with the profile fetch below
         if(lr && lr.user) window.app.applyUserDoc(lr.user); else await window.app.fetchUserData();
         document.getElementById('drawer-guest').classList.remove('guest-show'); document.getElementById('drawer-guest').classList.add('guest-hidden');

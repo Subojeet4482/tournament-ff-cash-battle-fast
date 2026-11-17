@@ -1,7 +1,7 @@
 /**
  * Deposit: UPI only (crypto removed). UPI is verified by UTR *or* Fam/UPI Transaction ID, race-safe (one payment can be credited only once).
  */
-import { api } from '../../js/core/api.js?v=2d72097ddc';
+import { api } from '../../js/core/api.js?v=684982f88b';
 
 Object.assign(window.app, {
     _activeDepositPolls: {},

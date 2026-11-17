@@ -1,10 +1,11 @@
 /**
  * Transfer money: recipient verify + send.
  */
-import { api } from '../../js/core/api.js?v=2d72097ddc';
+import { api } from '../../js/core/api.js?v=684982f88b';
 
 Object.assign(window.app, {
     verifyRecipient: async (pid) => {
+        // Transfers are disabled and users can no longer be searched from the app (privacy + security).
         const statusEl=document.getElementById('recipient-status'); window.app.recipientVerified=false; window.app.recipientUid=null;
         if(pid.length<5){ statusEl.innerHTML=""; return; }
         if(pid===(window.db.user_data.playerId||'')){ statusEl.innerHTML="<span class='text-danger'>Cannot send to self</span>"; return; }

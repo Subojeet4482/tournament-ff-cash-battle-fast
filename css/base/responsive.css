@@ -47,7 +47,7 @@
   #matches-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 0 26px; align-items: start; }
   #matches-container > .match-card, #matches-container > .sk-card { margin: 0 0 26px; }
   #matches-container > .empty-art { grid-column: 1 / -1; }
-  .match-banner { height: 168px; }
+  .match-banner { height: 230px; }
   .mm-card { margin-left: 0; margin-right: 0; }
   .credit-card { margin-left: 0; margin-right: 0; }
 

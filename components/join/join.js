@@ -1,7 +1,7 @@
 /**
  * Join-match flow: UID check, slot grid, confirm.
  */
-import { api } from '../../js/core/api.js?v=2d72097ddc';
+import { api } from '../../js/core/api.js?v=684982f88b';
 
 Object.assign(window.app, {
     // fresh match + the roster (names / slots of everybody) for the slot grid
@@ -15,9 +15,11 @@ Object.assign(window.app, {
     // Fill the join sheet from a match object (sync, no network)
     _fillJoin: (m) => {
         window.app.currentMatch=m;
+        { const rb=document.getElementById('join-rules-body'); if(rb && window.app.joinRulesHtml) rb.innerHTML=window.app.joinRulesHtml(m); }
+        { const aw=document.getElementById('join-age-wrap'); if(aw){ const ok=!!(window.db.user_data&&window.db.user_data.ageConfirmed); aw.style.display=ok?'none':''; const ab=document.getElementById('join-age'); if(ab&&!ok) ab.checked=false; } }
         document.getElementById('join-title').innerText=m.title; window.fx.countUp(document.getElementById('join-fee'), parseFloat(m.fee)||0);
         const mt=window.app._formatLabel?window.app._formatLabel(m):(m.matchType==='per_kill'?'Per Kill':'Win Prize');
-        document.getElementById('sum-type').innerText=mt; document.getElementById('sum-map').innerText=m.map||"Bermuda"; document.getElementById('sum-prize').innerText=m.prizeMode==='per_kill'?"₹"+((m.prizes&&m.prizes[1])||m.prize)+"/kill":"₹"+m.prize;
+        document.getElementById('sum-type').innerText=mt; document.getElementById('sum-map').innerText=m.map||"Bermuda"; document.getElementById('sum-prize').innerHTML=(m.rewards&&m.rewards.places&&window.app._prizeInfo)?window.app._prizeInfo(m).big:(m.prizeMode==='per_kill'?"₹"+((m.prizes&&m.prizes[1])||m.prize)+"/kill":"₹"+m.prize);
         const fee=parseFloat(m.fee); const btn=document.getElementById('btn-pay-join'); const balStatus=document.getElementById('join-bal-status');
         const totalBal = (window.db.depositBalance||0)+(window.db.withdrawBalance||0);
         if(totalBal<fee){ btn.disabled=true; btn.innerText="Insufficient Balance"; balStatus.innerHTML=`₹${totalBal.toFixed(2)} <span class="bal-low">(Low)</span>`; }
@@ -25,7 +27,7 @@ Object.assign(window.app, {
     },
     openJoin: (id) => {
         // Duplicate check - a match can be joined only once
-        if((window.db.joined_ids||[]).includes(id)) return window.ui.toast("You have already joined this match.");
+        if((window.db.joined_ids||[]).includes(id)) return window.app.resumeSlot(id);   // paid but no slot yet -> reopen the slot step
         const cached=(window.db.matches||[]).find(x=>x.id===id);
         const open=(m)=>{
             if(m.locked) return window.app.showGeoMsg();       // paid match, but payment is hidden in this user's state
@@ -65,24 +67,27 @@ Object.assign(window.app, {
         }).catch((e)=>window.ui.toast(e && e.status===404 ? "This match is no longer available." : (e.message||"Network error. Please check your internet connection and try again.")));
     },
     confirmJoin: async () => {
-        const match=window.app.currentMatch; const fee=parseFloat(match.fee);
+        const match=window.app.currentMatch; const fee=parseFloat(match.fee)||0;
         const gameName=document.getElementById('game-name').value.trim();
         const gameUid=document.getElementById('game-uid').value.trim();
         const checkbox=document.getElementById('join-terms');
+        const ageBox=document.getElementById('join-age'), ageWrap=document.getElementById('join-age-wrap');
+        const needAge=!!(ageWrap && ageWrap.style.display!=='none');
         const uidErr=document.getElementById('uid-error');
-        const totalBal=(window.db.depositBalance||0)+(window.db.withdrawBalance||0);
+        const uid=window.db.user_uid;
         if((window.db.joined_ids||[]).includes(match.id)) return window.ui.toast("Already joined!");
         if(gameName.length<3) return window.ui.toast("Name too short!");
-        // FF UID 6-12 digits
-        if(isNaN(gameUid) || gameUid.length<6 || gameUid.length>12){ uidErr.style.display='block'; return window.ui.toast("FF UID invalid (6-12 digits)"); }
+        // FF UID: digits only, 6-12 long (no "1e10", no decimals, no spaces)
+        if(!/^\d{6,12}$/.test(gameUid)){ uidErr.style.display='block'; return window.ui.toast("FF UID invalid (6-12 digits)"); }
         uidErr.style.display='none';
-        if(!checkbox.checked) return window.ui.toast("Agree to rules!");
-        if(totalBal<fee) return window.ui.toast("Insufficient Balance!");
+        if(!checkbox.checked) return window.ui.toast("Please read and accept the rules!");
+        if(needAge && !(ageBox && ageBox.checked)) return window.ui.toast("Please confirm you are 18+ and not in a restricted state.");
         if(!window.app.rateLimit('join_'+match.id,60000)) return;
         const btn=document.getElementById('btn-pay-join'); btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+        const reset=(msg)=>{ window.app.endAction('join_'+match.id,false); btn.disabled=false; btn.innerText="Pay & Join"; if(msg) window.ui.toast(msg); };
         try {
             // ONE server call: the server checks balance, state rules, free seat and does entry + wallet debit in a single atomic step
-            const jr = await api.post('/matches/' + match.id + '/join', { gameName, gameUid });
+            const jr = await api.post('/matches/' + match.id + '/join', { gameName, gameUid, ageConfirmed: needAge ? true : undefined });
             if(jr.depositBalance!==undefined){ window.db.depositBalance=jr.depositBalance; window.db.withdrawBalance=jr.withdrawBalance; window.db.balance=jr.depositBalance+jr.withdrawBalance; }
             window.db.joined_ids.push(match.id);
             window.app.endAction('join_'+match.id,true);
@@ -102,6 +107,26 @@ Object.assign(window.app, {
             if(e.code==='already' && !(window.db.joined_ids||[]).includes(match.id)) window.db.joined_ids.push(match.id);
             if(!window.app.geoBlocked(e)) window.ui.toast(e.message);
         }
+    },
+    // A paid player who has no slot yet (closed the app before choosing) comes back here
+    resumeSlot: async (id) => {
+        const uid=window.db.user_uid; if(!uid) return;
+        try {
+            const m=(await api.get('/matches/'+id)).match;
+            if(!m) return window.ui.toast("This match is no longer available.");
+            if(!m.isJoined) return window.ui.toast("You have not joined this match.");
+            if(Array.isArray(m.mySlots) && m.mySlots.length) return window.ui.toast("You have already joined this match. Slot #"+m.mySlots[0]);
+            if(['live','completed','cancelled','finished'].includes(m.status)) return window.ui.toast("This match has started. Please message support about your slot.");
+            const fm=await window.app._slotMatch(id, m);
+            window.app._fillJoin(fm); window.app.selectedSlot=null; window.app.currentMatch=fm;
+            window.fx.joinDoneHide();
+            document.getElementById('join-steps').dataset.step='2';
+            document.getElementById('join-step1').classList.add('hidden');
+            const s2=document.getElementById('join-step2'); s2.classList.remove('hidden');
+            const cb=document.getElementById('btn-confirm-slot'); if(cb){ cb.disabled=true; cb.innerText='Select a slot'; }
+            window.app.renderSlotGrid(fm);
+            window.ui.openModal('modal-join');
+        } catch(e){ window.ui.toast("Network error. Please try again."); }
     },
     renderSlotGrid: (match) => {
         const total=match.total||48;
@@ -170,17 +195,18 @@ Object.assign(window.app, {
     confirmSlot: async () => {
         const match=window.app.currentMatch; const slots=window.app.selectedSlot;
         if(!slots||!slots.length) return window.ui.toast("Please select a slot first.");
+        if(slots.length!==1 || !Number.isInteger(Number(slots[0]))) return window.ui.toast("Please select exactly one slot.");
+        const slot=Number(slots[0]), uid=window.db.user_uid;
         const _btn=document.getElementById('btn-confirm-slot');
         const _oldTxt=_btn?_btn.innerText:'';
         if(_btn){ _btn.disabled=true; _btn.innerText='Confirming...'; }
-        const fee=parseFloat(match.fee)||0;
         try {
             await api.post('/matches/' + match.id + '/slot', { slots });          // server allocates the slot atomically (race-safe)
             window.app.fetchMatches();
-            await window.fx.joinDone(`Slot #${slots.join(',')} Confirmed!`, 'Good luck for the match 🔥', {confetti:true, hold:1700, keep:true});
+            await window.fx.joinDone(`Slot #${slot} Confirmed!`, 'Good luck for the match 🔥', {confetti:true, hold:1700, keep:true});
             window.ui.closeModal();
             setTimeout(window.fx.joinDoneHide, 600);
-            window.ui.toast(`Slot #${slots.join(',')} confirmed! ✅`);
+            window.ui.toast(`Slot #${slot} confirmed! ✅`);
         } catch(e){
             // Someone else took the slot — the user has already joined, just pick another slot (no refund needed)
             if(e.code==='slot_taken'){
@@ -188,6 +214,10 @@ Object.assign(window.app, {
                 window.app.selectedSlot=null;
                 { const _fm = await window.app._slotMatch(match.id, match); window.app.currentMatch=_fm; window.app.renderSlotGrid(_fm); }
                 const _cb=document.getElementById('btn-confirm-slot'); if(_cb){ _cb.disabled=true; _cb.innerText='Select a slot'; }
+            } else if(em==='SLOT_ALREADY'){
+                window.ui.toast("You already have a slot in this match."); window.ui.closeModal(); window.app.fetchMatches();
+            } else if(e && e.code==='permission-denied'){
+                window.ui.toast("Slot could not be saved. Please refresh and try again, or message support.");
             } else {
                 window.ui.toast(e.message);
             }

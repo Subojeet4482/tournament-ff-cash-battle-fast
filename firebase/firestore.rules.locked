@@ -1,7 +1,8 @@
-// LOCKED RULES - paste into Firebase Console -> Firestore Database -> Rules   (DB-1 main project, DB-2 history project, DB-3 chat project)
+// LOCKED RULES - paste into Firebase Console -> Firestore Database -> Rules   for DB-2 (history project) and DB-3 (chat project) ONLY.
+//   DB-1 (main project) must use  firestore.rules.DB1-admin-only  - the admin panel pages read/write DB-1 from the browser and a full lock would break them.
 //
 // After the app uses the load balancer API, the phones must NOT touch Firestore any more.
-// Our servers and the admin panel use the Firebase ADMIN SDK, which ignores these rules - so they keep working.
+// Our servers use the Firebase ADMIN SDK, which ignores these rules - so they keep working.
 // Firebase Authentication (login / signup / Google) is a different product and is not affected.
 //
 // Publish this ONLY AFTER the new app version is live (older cached app versions that still talk to Firestore stop working).

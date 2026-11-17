@@ -3,28 +3,53 @@
     <div class="modal-overlay" onclick="ui.closeModal()"></div>
     <div class="modal-sheet lo-sheet">
         <div class="sheet-handle"></div>
-        <div class="lo-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
-        <h2 class="lo-title">Logout?</h2>
-        <p class="lo-text">Your account and balance stay safe. You can log back in any time.</p>
+        <div class="lo-door"><div class="lo-door-in"><i class="fa-solid fa-door-open"></i></div></div>
+        <h2 class="lo-title">Leaving already?</h2>
+        <p class="lo-text">Your account, matches and wallet stay safe. Log back in any time.</p>
+        <div class="lo-user">
+            <div class="lo-av" id="lo-av">P</div>
+            <div class="lo-u"><b id="lo-name">Player</b><small id="lo-bal">Your balance is safe</small></div>
+            <span class="lo-safe"><i class="fa-solid fa-shield-halved"></i> Safe</span>
+        </div>
         <div class="lo-actions">
-            <button class="btn-main lo-stay" onclick="ui.closeModal()">Stay</button>
-            <button class="btn-main lo-go" onclick="auth.confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            <button class="btn-main lo-stay" onclick="ui.closeModal()">Stay logged in</button>
+            <button class="btn-main lo-go" onclick="auth.confirmLogout()"><i class="fa-solid fa-right-from-bracket"></i> Log out</button>
         </div>
     </div>
 </div>
 
 <!-- LOGOUT / SESSION OVERLAY -->
-<div id="session-overlay">
-    <div class="so-orb so-orb1"></div><div class="so-orb so-orb2"></div>
+<div id="session-overlay" aria-live="polite">
+    <div class="so-orb so-orb1"></div><div class="so-orb so-orb2"></div><div class="so-orb so-orb3"></div>
     <div class="so-box">
-        <div class="so-ring"><div class="so-ring-in"><i class="fa-solid fa-right-from-bracket" id="so-icon"></i></div></div>
+        <div class="so-ring">
+            <svg class="so-svg" viewBox="0 0 110 110" aria-hidden="true"><circle class="so-track" cx="55" cy="55" r="46"/><circle class="so-arc" cx="55" cy="55" r="46"/></svg>
+            <div class="so-core">
+                <i class="fa-solid fa-right-from-bracket so-ic"></i>
+                <svg class="so-check" viewBox="0 0 52 52" aria-hidden="true"><path d="M14 27l8 8 16-17"/></svg>
+            </div>
+        </div>
         <h3 id="so-title">Logging out…</h3>
         <p id="so-sub">Securing your session</p>
+        <div class="so-steps" aria-hidden="true">
+            <span class="so-st" id="so-s1"><i></i>Saving</span>
+            <span class="so-st" id="so-s2"><i></i>Signing out</span>
+            <span class="so-st" id="so-s3"><i></i>Done</span>
+        </div>
     </div>
 </div>
 
-<!-- WELCOME CHIP -->
-<div id="welcome-chip">
-    <span class="wc-emoji">👋</span>
-    <div><div class="wc-title" id="wc-title">Welcome back!</div><div class="wc-sub" id="wc-sub"></div></div>
+<!-- WELCOME CARD (after login) -->
+<div id="welcome-card" role="status" aria-live="polite">
+    <div class="wl-conf" id="wl-conf"></div>
+    <div class="wl-row">
+        <div class="wl-av"><span id="wl-ini">P</span><span class="wl-wave">👋</span></div>
+        <div class="wl-txt">
+            <div class="wl-tag"><i class="fa-solid fa-circle-check"></i><span id="wl-tag">Login successful</span></div>
+            <div class="wl-title" id="wl-title">Welcome back!</div>
+            <div class="wl-sub" id="wl-sub">Ready to win some matches? 🎯</div>
+        </div>
+        <img class="wl-logo" src="assets/icons/icon-192.png" alt="FF Cash Battle" width="52" height="52" decoding="async">
+    </div>
+    <div class="wl-bar"><i></i></div>
 </div>

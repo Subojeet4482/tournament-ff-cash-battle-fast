@@ -1,7 +1,7 @@
 /**
  * Core app object: session check, init, rate-limit helpers, config + user data fetch. Feature files extend window.app.
  */
-import { api } from './api.js?v=2d72097ddc';
+import { api } from './api.js?v=684982f88b';
 
 window.app = {
     currentMatch:null, activeTab:'upcoming', selectedCategory:'All', tempImage:null,

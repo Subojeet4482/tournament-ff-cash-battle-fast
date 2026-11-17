@@ -56,6 +56,7 @@
             if(!perm && days<1) days = 1;
 
             $('bo-pid').textContent = pidOf(d);
+            $('bo-note').textContent = 'Think this is a mistake? Message support and share your Player ID.';
             $('bo-status').textContent = perm ? 'Account banned' : 'Temporarily banned';
             $('bo-title').textContent = perm ? 'You can’t play right now' : 'Take a break for now';
             $('bo-sub').textContent = perm

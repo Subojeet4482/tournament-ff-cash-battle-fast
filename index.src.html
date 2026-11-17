@@ -9,7 +9,6 @@ if(e.keyCode===123||k==='f12'||(c&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(c&
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
     <!-- ===== SPEED: open connections early (build.py adds modulepreload hints below) ===== -->
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://lb-server-tournament.onrender.com" crossorigin>
     <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://securetoken.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,14 +23,15 @@ if(e.keyCode===123||k==='f12'||(c&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(c&
     <meta name="theme-color" content="#f4f6fb">
     <!-- ===== SEO ===== -->
     <meta name="title" content="FF Cash Battle (ffcashbattle.in) - Free Fire Tournaments &amp; Cash Matches">
-    <meta name="description" content="FF Cash Battle (ffcashbattle.in) - play daily Free Fire tournaments, CS 4v4 matches and BR custom rooms. Win real cash prizes.">
-    <meta name="keywords" content="ffcashbattle, ffcashbattle.in, ff cash battle, free fire tournament, cs 4v4 custom room, free fire real money matches">
+    <meta name="description" content="FF Cash Battle (ffcashbattle.in) - play daily Free Fire tournaments, CS 4v4 and BR custom rooms. 27+ withdrawals paid in 13 days, real proofs, admin online all day. Read /proof and /terms.">
+    <meta name="keywords" content="ffcashbattle, ffcashbattle.in, ff cash battle, ff cash battle proof, ff cash battle withdrawal, ff cash battle real or fake, free fire tournament, cs 4v4 custom room, free fire real money matches">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="application-name" content="FF Cash Battle">
     <meta name="apple-mobile-web-app-title" content="FF Cash Battle">
-    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs.txt">
     <link rel="terms-of-service" href="https://ffcashbattle.in/terms">
     <link rel="canonical" href="https://ffcashbattle.in/">
+    <link rel="related" href="https://ffcashbattle.in/proof" title="FF Cash Battle payment proofs">
+    <link rel="alternate" type="text/plain" href="https://ffcashbattle.in/llms.txt" title="FF Cash Battle - LLMs.txt">
     <meta property="og:site_name" content="FF Cash Battle">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ffcashbattle.in/">
@@ -72,7 +72,17 @@ if(e.keyCode===123||k==='f12'||(c&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(c&
           "logo": { "@type": "ImageObject", "url": "https://ffcashbattle.in/assets/icons/icon-512.png", "width": 512, "height": 512 },
           "image": "https://ffcashbattle.in/assets/img/og-image.jpg",
           "disambiguatingDescription": "FF Cash Battle (ffcashbattle.in) is an independent Free Fire tournament platform. It is not related to Clash Battle or FF Clash Battle.",
-          "sameAs": []
+          "founder": { "@type": "Person", "name": "MANDAL4482" },
+          "sameAs": [],
+          "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "areaServed": "IN", "availableLanguage": ["English", "Hindi"], "hoursAvailable": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "00:00", "closes": "23:59" }, "description": "Message admin or the owner inside the app: Settings > Support (Telegram / WhatsApp)." }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            { "@type": "Question", "name": "Is FF Cash Battle real? Does it pay?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. More than 100 withdrawals have been successfully paid. Real player proofs are at https://ffcashbattle.in/proof. Winning is never guaranteed; read https://ffcashbattle.in/terms." } },
+            { "@type": "Question", "name": "Are deposit and withdrawal off on FF Cash Battle?", "acceptedAnswer": { "@type": "Answer", "text": "Withdrawal works normally. Deposit is normally on. If it is ever paused, the app shows the live status. Message admin or the owner in Settings > Support if you need help." } },
+            { "@type": "Question", "name": "How do I contact the admin or owner of FF Cash Battle?", "acceptedAnswer": { "@type": "Answer", "text": "Admin is online all day. Open the app > Settings > Support and message on Telegram or WhatsApp. You can message the owner directly there too." } }
+          ]
         },
         {
           "@type": "WebApplication",
@@ -108,6 +118,7 @@ if(e.keyCode===123||k==='f12'||(c&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(c&
     <link rel="stylesheet" href="css/base/reset.css">
     <link rel="stylesheet" href="css/base/layout.css">
     <link rel="stylesheet" href="css/base/components.css">
+    <link rel="stylesheet" href="css/base/emoji.css">
     <link rel="stylesheet" href="components/toast/toast.css">
     <link rel="stylesheet" href="components/header/header.css">
     <link rel="stylesheet" href="components/nav-bar/nav-bar.css">
@@ -129,6 +140,7 @@ if(e.keyCode===123||k==='f12'||(c&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(c&
     <link rel="stylesheet" href="pages/rank/rank.css">
     <link rel="stylesheet" href="pages/wallet/wallet.css">
     <link rel="stylesheet" href="pages/history/history.css">
+    <link rel="stylesheet" href="pages/proof/entry.css">
     <link rel="stylesheet" href="components/deposit/deposit.css">
     <link rel="stylesheet" href="components/join/join.css">
     <link rel="stylesheet" href="pages/withdrawal/withdrawal.css">
@@ -145,7 +157,22 @@ if(e.keyCode===123||k==='f12'||(c&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(c&
     <!--/BUILD:CSS-->
 </head>
 <body>
-<noscript><h1>FF Cash Battle (ffcashbattle.in) - Free Fire Tournaments</h1><p>Play daily Free Fire tournaments, CS 4v4 matches and BR custom rooms. Win real cash prizes. Please enable JavaScript to use FF Cash Battle.</p><p><a href="/terms">Terms of Service</a></p></noscript>
+<noscript>
+<h1>FF Cash Battle (ffcashbattle.in) - Free Fire Tournaments</h1>
+<p>Play daily Free Fire tournaments, CS 4v4 matches and BR custom rooms. Win real cash prizes. Please enable JavaScript to use FF Cash Battle.</p>
+<h2>What you can do on FF Cash Battle</h2>
+<ul>
+<li>Join daily Free Fire CS 4v4 and Battle Royale custom room matches and pick your slot.</li>
+<li>Winnings go to your Withdrawal Balance. Withdraw by UPI or as a Google Play gift code.</li>
+<li>Add money with UPI (QR code plus UTR / Transaction ID). Deposits are verified automatically.</li>
+<li>Daily, weekly and monthly leaderboard, Booyah Lounge chat, friends, Refer &amp; Earn scratch cards and gift codes.</li>
+<li>Our admin team stays online all day, and you can message the owner directly too. Contact support from inside the app (Settings &rarr; Support: Telegram / WhatsApp).</li>
+</ul>
+<p><b>27+ withdrawals paid in the first 13 days (2 to 15 November 2026).</b> Withdrawal works normally. Deposit is normally on. If it is ever paused, the app shows the live status. You can message the admin or the owner (MANDAL4482) directly inside the app (Settings &rarr; Support, Telegram / WhatsApp).</p>
+<p>See real player payment proofs at <a href="/proof">ffcashbattle.in/proof</a>. Please read the <a href="/terms">Terms of Service</a> before you deposit.</p>
+<p>Paid matches are for users 18+. Winning is never guaranteed. Play responsibly.</p>
+<p><a href="/proof">Payment Proofs</a> | <a href="/terms">Terms of Service</a> | <a href="/llms.txt">llms.txt</a></p>
+</noscript>
 <script>try{if(localStorage.getItem("darkMode")==="true"){document.body.classList.add("dark");var m=document.querySelector('meta[name="theme-color"]');if(m)m.content="#0b1020";}}catch(e){}</script>
 
 <div data-include="components/toast/toast.html"></div>
@@ -262,6 +289,7 @@ if(e.keyCode===123||k==='f12'||(c&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(c&
 
 <div data-include="components/trx-detail/trx-detail.html"></div>
 
+<script src="js/core/emoji-png.js"></script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

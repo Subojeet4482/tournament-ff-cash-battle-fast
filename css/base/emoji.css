@@ -1,0 +1,8 @@
+/* Emoji PNG (js/core/emoji-png.js + build step): sized with the text around it, so it scales with any font-size */
+img.emj { display:inline-block; width:1.18em; height:1.18em; margin:0 .03em; vertical-align:-.22em; object-fit:contain;
+  -webkit-user-select:none; user-select:none; -webkit-user-drag:none; pointer-events:none; image-rendering:auto; flex:none; }
+button img.emj, a img.emj, label img.emj { pointer-events:none; }
+
+/* An emoji PNG inside a match banner (e.g. the pinned-match pin in the title) must stay inline-sized:
+   ".match-banner img" (width/height 100%, purple placeholder, scale on hover) was stretching it over the whole banner. */
+.match-banner img.emj, .match-card:hover .match-banner img.emj { width:1.18em; height:1.18em; background:none; object-fit:contain; transform:none; filter:none; transition:none; }

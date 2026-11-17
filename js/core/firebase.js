@@ -6,13 +6,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, sendEmailVerification, deleteUser, verifyPasswordResetCode, confirmPasswordReset, linkWithCredential } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCYIDgxy7-WV_a_q1hbqNuzNmqD3ayHMXg",
-    authDomain: "database1-ccd73.firebaseapp.com",
-    projectId: "database1-ccd73",
-    storageBucket: "database1-ccd73.firebasestorage.app",
-    messagingSenderId: "905783144633",
-    appId: "1:905783144633:web:be664ec42d6d60af7c6b68",
-    measurementId: "G-BVDD84YD1N"
+    apiKey: "AIzaSyA1DJ5TQaK8HxasfTwKHNTxgNPHRCy4KRY",
+    authDomain: "tournament-e8da7.firebaseapp.com",
+    projectId: "tournament-e8da7",
+    storageBucket: "tournament-e8da7.firebasestorage.app",
+    messagingSenderId: "461449506021",
+    appId: "1:461449506021:web:93cab101e9d382f8a2f80c"
 };
 
 export const appInstance = initializeApp(firebaseConfig);

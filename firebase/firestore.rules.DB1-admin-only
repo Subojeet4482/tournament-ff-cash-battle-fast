@@ -1,0 +1,17 @@
+// DB-1 (MAIN project) rules for the new system  ->  Firebase Console -> Firestore Database -> Rules -> Publish
+//
+// Phones / the user app never touch Firestore any more (everything goes through the load balancer), so normal users get NOTHING here.
+// The ADMIN panel pages (admin.html: users, finance, matches, gift codes, leaderboard ...) sign in with a custom token that carries
+// the claim  admin: true  and read / write Firestore straight from the browser, so they MUST be allowed here.
+// Servers (S1-S5), the Payment Bot and the Backup Center use the Admin SDK and ignore these rules.
+//
+// Publish this ONLY AFTER the new user app is live (older cached app versions that talk to Firestore directly stop working).
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() { return request.auth != null && request.auth.token.admin == true; }
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

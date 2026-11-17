@@ -80,3 +80,7 @@ body.dark .theme-track .toggle-dot { left:27px; transform:rotate(360deg); backgr
 body.dark .theme-track:active .toggle-dot { left:23px; }
 
 body.dark .geo-note { background: #1e293b; border-color: #334155; color: #bfdbfe; }
+body.dark .rw-list { background:rgba(168,85,247,.12); border-color:rgba(168,85,247,.35); }
+body.dark .rw-li { border-color:rgba(168,85,247,.25); }
+body.dark .rw-li span { color:#d8b4fe; }
+body.dark .rw-li b { color:#f3f4f6; }

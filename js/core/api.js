@@ -2,11 +2,11 @@
  * API client for the LOAD BALANCER (all data goes through it - the app no longer reads/writes Firestore).
  *
  * Login:  Firebase Auth (email / Google) gives an ID token  ->  POST /auth/login  ->  our session token (valid 1 hour).
- * Every call sends:  X-Site-Key (your domain's key) + Authorization: Bearer <session token> + X-Device-FP (device fingerprint).
+ * Every call sends:  Authorization: Bearer <session token> + X-Device-FP (device fingerprint).
  * When the 1-hour token ends the client silently logs in again with a fresh Firebase ID token and repeats the call once.
  */
-import { authService } from './firebase.js?v=2d72097ddc';
-import { LB_URL, SITE_KEY } from './app-config.js?v=2d72097ddc';
+import { authService } from './firebase.js?v=684982f88b';
+import { LB_URL } from './app-config.js?v=684982f88b';
 
 export class ApiError extends Error {
     constructor(status, code, message, data) { super(message || 'Something went wrong'); this.status = status; this.code = code || ''; this.data = data || {}; }
@@ -31,15 +31,11 @@ export const deviceFp = () => {
 const loadSess = () => { if (sess) return sess; try { const j = JSON.parse(sessionStorage.getItem(SKEY) || 'null'); if (j && j.token && j.exp > Date.now() + 30000) sess = j; } catch (e) {} return sess; };
 const saveSess = (s) => { sess = s; try { if (s) sessionStorage.setItem(SKEY, JSON.stringify(s)); else sessionStorage.removeItem(SKEY); } catch (e) {} };
 
-const base = () => String(LB_URL || '').trim().replace(/\/+$/, '');
-
-// Render free servers sleep: wake the load balancer as soon as the app opens (no CORS needed, response ignored)
-try { if (base()) fetch(base() + '/health', { mode: 'no-cors', cache: 'no-store', keepalive: true }).catch(() => {}); } catch (e) {}
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const base = () => String(LB_URL || '').replace(/\/+$/, '');
 
 async function raw(method, path, body, { token, timeout = 70000 } = {}) {
     if (!base()) throw new ApiError(0, 'no_config', 'App is not configured (LB_URL missing).');
-    const headers = { 'Content-Type': 'application/json', 'X-Site-Key': SITE_KEY, 'X-Device-FP': deviceFp() };
+    const headers = { 'Content-Type': 'application/json', 'X-Device-FP': deviceFp() };
     if (token) headers.Authorization = 'Bearer ' + token;
     const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), timeout);
     let res;
@@ -77,19 +73,36 @@ async function ensure() {
 
 // what the ban screen needs, from the server's 403 'banned' error
 export const banData = (d) => { d = d || {}; return { isBanned: true, bannedUntil: d.bannedUntil || 'permanent', banReason: d.reason || '', banDays: d.banDays, bannedAt: d.bannedAt, playerId: d.playerId || '' }; };
+// whole app switched to MAINTENANCE by the admin (Telegram bot -> Controls): show one blocking notice, re-check every 15 s and close it by itself
+let maintEl = null, maintTimer = null;
+function showMaintenance(msg) {
+    try {
+        if (!maintEl) {
+            maintEl = document.createElement('div');
+            maintEl.id = 'maint-overlay';
+            maintEl.setAttribute('style', 'position:fixed;inset:0;z-index:2147483000;background:rgba(15,23,42,.96);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;font-family:system-ui,sans-serif');
+            maintEl.innerHTML = '<div style="font-size:54px;margin-bottom:10px">🚧</div><div style="font-size:20px;font-weight:800;margin-bottom:8px">We\u2019ll be right back</div><div id="maint-msg" style="font-size:14px;opacity:.85;max-width:320px;line-height:1.5"></div><button id="maint-retry" style="margin-top:20px;background:#22c55e;color:#fff;border:0;border-radius:12px;padding:12px 26px;font-weight:700;font-size:14px">Try again</button>';
+            document.body.appendChild(maintEl);
+            maintEl.querySelector('#maint-retry').onclick = () => location.reload();
+        }
+        maintEl.querySelector('#maint-msg').textContent = msg || 'We are under maintenance. Please try again in a little while.';
+        if (!maintTimer) maintTimer = setInterval(async () => {
+            try {
+                const r = await fetch(LB_URL + '/lb/status', { cache: 'no-store' });
+                const j = await r.json();
+                if (!j.maintenance) { clearInterval(maintTimer); maintTimer = null; location.reload(); }
+                else if (maintEl) maintEl.querySelector('#maint-msg').textContent = j.message || 'We are under maintenance. Please try again in a little while.';
+            } catch (x) {}
+        }, 15000);
+    } catch (x) {}
+}
 const onBanned = (e) => { try { if (e.code === 'banned' && window.app && window.app.checkBan) window.app.checkBan(banData(e.data)); } catch (x) {} };
 
 async function request(method, path, body, opts = {}) {
     const auth = opts.auth !== false;
     let token = auth ? await ensure() : null;
     try {
-        try {
-            return await raw(method, path, body, { token, timeout: opts.timeout });
-        } catch (e) {
-            // reads are safe to repeat: one quiet retry on network error / bad gateway / unavailable (server waking up, failover)
-            if (method === 'GET' && (e.code === 'network' || e.status === 502 || e.status === 503 || e.status === 504)) { await sleep(1500); return await raw(method, path, body, { token, timeout: opts.timeout }); }
-            throw e;
-        }
+        return await raw(method, path, body, { token, timeout: opts.timeout });
     } catch (e) {
         if (auth && e.status === 401 && (e.code === 'token_expired' || e.code === 'token_revoked') && !opts._retried) {
             saveSess(null);
@@ -97,6 +110,7 @@ async function request(method, path, body, opts = {}) {
             return request(method, path, body, Object.assign({}, opts, { _retried: true }));
         }
         onBanned(e);
+        if (e && e.code === 'maintenance') showMaintenance(e.message);
         throw e;
     }
 }
