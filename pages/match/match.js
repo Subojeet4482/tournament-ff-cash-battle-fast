@@ -114,7 +114,7 @@ Object.assign(window.app, {
                 <div><small>Slot</small><b>#${esc(slot)}</b></div>
                 <div><small>Kills</small><b>${R.kills}</b></div>
                 <div><small>Type</small><b>${esc(typeLbl(m))}</b></div>
-                <div><small>${perKill ? 'Per Kill' : 'Prize Pool'}</small><b>${money(m.prize)}</b></div>
+                <div><small>${perKill ? 'Per Kill' : 'Prize Pool'}</small><b>${(m.prize>0||!m.rewards)?money(m.prize):window.app._prizeInfo(m).big}</b></div>
                 <div><small>Players</small><b>${joined}/${total}</b></div>
                 <div><small>Map</small><b>${esc(m.map || 'Bermuda')}</b></div>
             </div>
@@ -138,9 +138,10 @@ Object.assign(window.app, {
             ${window.app._roomBox(m, slot, false)}
             <div class="mx-grid">
                 <div><small>Entry Fee</small><b>${money(m.fee)}</b></div>
-                <div><small>${perKill ? 'Per Kill' : 'Prize Pool'}</small><b>${money(m.prize)}</b></div>
+                <div><small>${perKill ? 'Per Kill' : 'Prize Pool'}</small><b>${(m.prize>0||!m.rewards)?money(m.prize):window.app._prizeInfo(m).big}</b></div>
                 <div><small>Type</small><b>${esc(typeLbl(m))}</b></div>
             </div>
+            ${window.app._rwRows ? window.app._rwRows(m) : ''}
             <div class="mx-players"><div class="mx-pl-t"><span><i class="fa-solid fa-users"></i> Players joined</span><b>${joined}/${total}</b></div><div class="mx-bar"><i style="--w:${pct}%"></i></div></div>
             <div class="mx-ff"><div><small>FF Name</small><b>${esc(me.gameName || '-')}</b></div><div><small>FF UID</small><b>${esc(me.gameUid || '-')}</b></div></div>
             ${window.app.rosterBtn(m)}

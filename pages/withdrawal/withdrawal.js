@@ -1,7 +1,7 @@
 /**
  * Withdrawal: UPI (details can be saved in this browser) + Google Play gift card, coin animation, success popup.
  */
-import { api } from '../../js/core/api.js?v=2d72097ddc';
+import { api } from '../../js/core/api.js?v=684982f88b';
 
 Object.assign(window.app, {
     // ===== WITHDRAWAL SUCCESS MODAL =====
@@ -47,10 +47,11 @@ Object.assign(window.app, {
     },
     updateNet: (kind, val) => {
         const amt = parseFloat(val)||0, el = document.getElementById('wd-'+kind+'-net');
-        if(amt >= window.app.minWd()){ el.style.display='block'; document.getElementById('wd-'+kind+'-net-val').innerText=(kind==='gp' ? amt : amt-2).toFixed(2); }
+        if(amt >= window.app.minWd()){ el.style.display='block'; document.getElementById('wd-'+kind+'-net-val').innerText=(kind==='gp' ? amt : amt-window.app.wdFee()).toFixed(2); }
         else el.style.display='none';
     },
     // limits set by the admin (config/banner): withdraw default Rs 10, deposit default Rs 5
+    wdFee: () => { const f = Number(window.db && window.db.withdrawFee); return isFinite(f) && f >= 0 && window.db && window.db.withdrawFee !== undefined ? f : 2; },   // config/banner.withdrawFee, default Rs 2
     minWd: () => Math.max(3, Number(window.db && window.db.minWithdraw) || 10),
     minDep: () => Math.max(1, Number(window.db && window.db.minDeposit) || 5),
     applyMins: () => {
@@ -69,13 +70,14 @@ Object.assign(window.app, {
         return ({
             dep: 'Deposit is temporarily disabled. Please try again later.',
             wd:  'Withdrawals are temporarily disabled. Please try again later.',
-            upi: 'UPI withdrawal is temporarily disabled. Please try again later.'
+            upi: 'UPI withdrawal is off right now. Message admin on Telegram or WhatsApp support and they will switch it on, or use Google Play Gift Code.'
         })[k] || 'Google Play gift card is temporarily disabled. Please try again later.';
     },
     applyConfig: (d) => {
         d = d || {};
         window.db.minWithdraw = Number(d.minWithdraw) >= 1 ? Number(d.minWithdraw) : 10;
         window.db.minDeposit = Number(d.minDeposit) >= 1 ? Number(d.minDeposit) : 5;
+        window.db.withdrawFee = (d.withdrawFee !== undefined && d.withdrawFee !== null && d.withdrawFee !== '' && Number(d.withdrawFee) >= 0) ? Number(d.withdrawFee) : undefined;
         if (window.app.applyMins) window.app.applyMins();
         window.app.readFlags(d);
     },
@@ -103,6 +105,8 @@ Object.assign(window.app, {
     },
     applyFlags: () => {
         const A = window.app, $ = (id) => document.getElementById(id);
+        // titles are set here (not in the HTML) so crawlers never read "disabled" text from the static page
+        [['dep-off-title', 'Deposit Disabled'], ['wd-all-off-title', 'Withdrawal Disabled'], ['wd-upi-off-title', 'UPI Withdrawal Disabled'], ['wd-gp-off-title', 'Google Play Withdrawal Disabled']].forEach(([i, t]) => { const e = $(i); if (e) e.textContent = t; });
         const dm = $('modal-deposit'); if (dm) { dm.classList.toggle('dep-off', A.flagOff('dep')); const m = $('dep-off-msg'); if (m) m.textContent = A.flagMsg('dep'); }
         const wm = $('modal-withdraw'); if (wm) { wm.classList.toggle('wd-all-off', A.flagOff('wd')); const m = $('wd-all-off-msg'); if (m) m.textContent = A.flagMsg('wd'); }
         ['upi', 'gp'].forEach(k => {

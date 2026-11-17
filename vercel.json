@@ -29,6 +29,24 @@
       ]
     },
     {
+      "source": "/about",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/proof",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/(js|css|pages|components)/(.*)\\.(js|css)",
       "headers": [
         {
@@ -65,19 +83,6 @@
       ]
     },
     {
-      "source": "/llms.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
       "source": "/sw.js",
       "headers": [
         {
@@ -89,12 +94,33 @@
           "value": "/"
         }
       ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
     }
   ],
   "rewrites": [
     {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
       "source": "/terms",
       "destination": "/terms.html"
+    },
+    {
+      "source": "/proof",
+      "destination": "/proof.html"
     },
     {
       "source": "/((?!assets/|components/|css/|js/|pages/|sw\\.js|manifest\\.webmanifest|.*\\..*).*)",
@@ -120,6 +146,11 @@
     {
       "source": "/terms.html",
       "destination": "/terms",
+      "permanent": true
+    },
+    {
+      "source": "/about.html",
+      "destination": "/about",
       "permanent": true
     }
   ]

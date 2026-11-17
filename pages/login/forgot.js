@@ -5,7 +5,7 @@
  * NOTE: the link opens inside the app only when Firebase Console > Authentication > Templates > Password reset
  * > "Customize action URL" is set to the app's URL. Otherwise Firebase's default page opens (it still works).
  */
-import { sendPasswordResetEmail, verifyPasswordResetCode, confirmPasswordReset, authService } from '../../js/core/firebase.js?v=2d72097ddc';
+import { sendPasswordResetEmail, verifyPasswordResetCode, confirmPasswordReset, authService } from '../../js/core/firebase.js?v=684982f88b';
 
 const $ = (id) => document.getElementById(id);
 const COOLDOWN = 180000; // 3 min

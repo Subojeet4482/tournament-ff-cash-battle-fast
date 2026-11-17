@@ -2,17 +2,17 @@
  * Refer & Earn + Scratch cards — app side. All money / rules run on the server (Server-1, /ref/*, file modules/ref_mod.py, through the load balancer).
  * This file shows the page, the scratch card (canvas) and the FAQ; the amount a card holds is decided by the SERVER when you start scratching.
  */
-import { api as LB } from '../../js/core/api.js?v=2d72097ddc';
+import { api as LB } from '../../js/core/api.js?v=684982f88b';
 
 const $ = (id) => document.getElementById(id);
 const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const money = (v) => '₹' + (Number(v) || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
 const toast = (m) => { try { window.ui.toast(m); } catch (e) {} };
 const S = { d: null, shown: false, claiming: false };
-const countTo = (el, to, ms, isMoney) => { if (!to) return; const t0 = performance.now(), fmt = (v) => isMoney ? money(v) : String(Math.round(v)); const step = (t) => { const p = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(to * e); if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(to); }; requestAnimationFrame(step); };
+const countTo = (el, to, ms, isMoney) => { if (!to) return; const t0 = performance.now(), fmt = (v) => isMoney ? money(v) : (Number.isInteger(to) ? String(Math.round(v)) : String(Math.round(v * 100) / 100)); const step = (t) => { const p = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(to * e); if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(to); }; requestAnimationFrame(step); };
 
 async function api(path, body, ms = 30000) {
-    // Load balancer API (POST /ref/<path>) - session token + site key are added by js/core/api.js. Errors come back as {ok:false,error}.
+    // Load balancer API (POST /ref/<path>) - session token is added by js/core/api.js. Errors come back as {ok:false,error}.
     try { return await LB.post('/ref/' + path, body || {}, { timeout: Math.max(ms, 70000) }); }
     catch (e) { if (e && e.status && e.data && e.data.error) return e.data; if (e && e.status === 0) throw new Error(e.message); return { ok: false, error: (e && e.message) || 'Server error — try again' }; }
 }
@@ -73,7 +73,7 @@ const render = () => {
     const d = S.d, c = d.cfg, st = d.stats, pr = d.progress, body = $('ref-body'); if (!body) return;
     const seg = Array.from({ length: pr.per }, (_, i) => `<i class="${i < pr.have ? 'on' : ''}"></i>`).join('');
     const cards = d.cards.length ? d.cards.map(x => x.status === 'new'
-        ? `<div class="rc-tile new" onclick="refer.openCard('${esc(x.id)}')"><i class="fa-solid fa-gift"></i><b>SCRATCH</b><small>${x.src === 'gift' ? 'Gift code · tap to open' : x.src === 'admin' ? 'From admin · tap to open' : 'Tap to open'}</small></div>`
+        ? `<div class="rc-tile new" onclick="refer.openCard('${esc(x.id)}')"><i class="fa-solid fa-gift"></i><b>SCRATCH</b><small>${x.src === 'gift' ? 'Gift code · tap to open' : x.src === 'admin' ? 'From admin · tap to open' : x.src === 'match' ? '🏆 Match reward · tap to open' : 'Tap to open'}</small></div>`
         : x.status === 'cancelled' ? `<div class="rc-tile done cancel"><div class="rc-amt">Cancelled</div><small>${x.src === 'gift' ? 'Gift card' : 'Card'} · cancelled by admin</small></div>`
         : `<div class="rc-tile done"><div class="rc-amt">${money(x.amount)}</div><small>${x.at ? new Date(x.at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : 'Won'} · added</small></div>`).join('')
         : `<div class="ref-empty" style="grid-column:1/-1"><i class="fa-solid fa-ticket"></i>No scratch cards yet.<br>Invite a friend to win your first one!</div>`;
@@ -173,7 +173,7 @@ const emit = (n, x, y, kind) => {
 
 // the amount is shown under the foil as soon as the server has chosen it (so scratching reveals the real number)
 const curCard = () => (S.d && S.d.cards || []).find(c => c.id === SC.id);
-const jackMax = () => { const x = curCard(); if (x && x.src !== 'ref') return x.src === 'admin' && x.max > x.min ? x.max : 0; return (S.d && S.d.cfg && S.d.cfg.amountMode === 'random') ? S.d.cfg.maxAmount : 0; };
+const jackMax = () => { const x = curCard(); if (x && x.src !== 'ref') return (x.src === 'admin' || x.src === 'match') && x.max > x.min ? x.max * (x.mult || 1) : 0; return (S.d && S.d.cfg && S.d.cfg.amountMode === 'random') ? S.d.cfg.maxAmount : 0; };
 const cardWallet = () => { const x = curCard(); return x && x.src !== 'ref' ? (x.to === 'withdraw' ? 'Withdrawable balance' : 'Deposit balance') : walletTxt(S.d.cfg); };
 const showAmt = (amt) => { const max = jackMax(); $('sc-amt').textContent = String(Number(amt) || 0); $('sc-won').textContent = max && amt >= max * .8 ? 'JACKPOT!' : 'YOU WON'; };
 

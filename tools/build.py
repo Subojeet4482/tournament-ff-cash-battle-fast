@@ -119,6 +119,11 @@ def main():
     pre += ['    <link rel="modulepreload" href="' + g + '?v=' + v + '">' for g in graph]
     html = html.replace('<!--BUILD:PRELOAD-->', '\n'.join(pre))
 
+    # emoji -> PNG in the static HTML (runtime script handles text set by JS)
+    import sys; sys.path.insert(0, str(ROOT / 'tools'))
+    from emoji_static import make as _emoji_make
+    html = _emoji_make(ROOT)(html)
+
     OUT.write_text(html, encoding='utf-8')
 
     # 5. service worker cache name

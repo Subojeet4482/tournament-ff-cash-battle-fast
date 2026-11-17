@@ -1,7 +1,7 @@
 /**
  * Home page: categories + match list.
  */
-import { api } from '../../js/core/api.js?v=2d72097ddc';
+import { api } from '../../js/core/api.js?v=684982f88b';
 
 Object.assign(window.app, {
     // ===== Home banner slider: swipe / drag, arrows, dots, autoplay =====
@@ -82,11 +82,39 @@ Object.assign(window.app, {
     },
     _fmtDT: (v) => { if(!v) return ''; const d = v.seconds ? new Date(v.seconds*1000) : new Date(v); return isNaN(d) ? '' : d.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); },
     _formatLabel: (m) => m.modeShort ? `${m.modeShort} • ${(m.subMode||'').replace('v',' v ')}` : (m.matchType==='per_kill'?'Per Kill':m.matchType==='team_win'?(m.teamMode||'Team'):'Win Prize'),
+    _cardImg: '<img class="pz-card" src="assets/img/scratch-card.png" alt="Scratch card" draggable="false">',
+    _nf: (n) => Number(n).toLocaleString('en-IN', { maximumFractionDigits: 2 }),
+    _cardTxt: (o) => (o.min === o.max ? '₹' + window.app._nf(o.min) : '₹' + window.app._nf(o.min) + '–' + window.app._nf(o.max)),
+    // one reward value: scratch card (PNG + amount) or coin
+    _rwVal: (o, perKill) => o.t === 'card' ? `${window.app._cardImg}<span>${window.app._cardTxt(o)}${perKill ? ' / kill' : ''}</span>` : (o.t === 'coin' ? window.app.coinHtml(window.app._nf(o.amt)) + (perKill ? ' / kill' : '') : ''),
+    // "who gets what" list (only for matches the admin made with a reward plan)
+    _rwRows: (m) => {
+        const rp = m.rewards && m.rewards.places; if (!rp) return '';
+        const pm = m.prizeMode || (m.matchType==='per_kill'?'per_kill':'match_win'), team = (m.teamSize||1) > 1;
+        const lab = (k) => k==='K' ? '🎯 Per kill' : k==='R' ? (pm==='per_kill' ? '👥 Everyone who joined' : '👥 Everyone else') : pm==='match_win' ? (team ? '🏆 Winning team' : '🏆 Winner') : ({1:'🥇 1st',2:'🥈 2nd',3:'🥉 3rd'})[k];
+        const keys = Object.keys(rp).filter(k => rp[k].t !== 'none').sort((x, y) => (x==='R') - (y==='R') || String(x).localeCompare(String(y)));
+        if (!keys.length || keys.every(k => rp[k].t === 'card')) return ''; // scratch-card prizes stay secret: no per-place list / amounts
+        return `<div class="rw-list">${keys.map(k => `<div class="rw-li"><span>${lab(k)}</span><b>${window.app._rwVal(rp[k], k==='K')}</b></div>`).join('')}</div>`;
+    },
     _prizeInfo: (m) => {
         const pm = m.prizeMode || (m.matchType==='per_kill'?'per_kill':'match_win');
-        const pr = m.prizes || {};
+        const pr = m.prizes || {}, rwp = m.rewards && m.rewards.places;
+        const medals = {1:'🥇',2:'🥈',3:'🥉'}, A_ = window.app;
+        if (rwp) {   // coin / scratch-card plan made by admin
+            const t = (o, pk) => A_._rwVal(o, pk);
+            if (pm==='per_kill') {
+                const K = rwp.K || { t:'coin', amt: Number(pr[1])||Number(m.prize)||0 };
+                const chips = (rwp.R && rwp.R.t!=='none') ? `<span class="pz-chip">👥 ${t(rwp.R)}</span>` : '';
+                return { big: t(K), lbl: K.t==='card' ? 'Card per Kill' : 'Per Kill', rows: chips };
+            }
+            const ks = Object.keys(rwp).filter(k=>k!=='R' && k!=='K' && rwp[k].t!=='none');
+            const chips = ks.map(k=>`<span class="pz-chip">${medals[k]||'🏅'} ${t(rwp[k])}</span>`);
+            if (rwp.R && rwp.R.t!=='none') chips.push(`<span class="pz-chip">👥 ${t(rwp.R)}</span>`);
+            const allCard = ks.length && ks.every(k=>rwp[k].t==='card');
+            const big = allCard ? `${A_._cardImg}<span>Random</span>` : A_.coinHtml(m.prize||0);
+            return { big, lbl: allCard ? (ks.length>1 ? 'Win cards' : 'Win a card') : (ks.length>1 ? 'Total Prize' : (pm==='match_win' ? ((m.teamSize||1)>1?'Team Prize':'Match Win') : '1st Prize')), rows: allCard ? '' : chips.length>1 || (chips.length===1 && rwp.R && rwp.R.t!=='none') ? chips.join('') : '' };
+        }
         if (pm==='per_kill') return { big:window.app.coinHtml(Number(pr[1])||Number(m.prize)||0), lbl:'Per Kill', rows:'' };
-        const medals = {1:'🥇',2:'🥈',3:'🥉'};
         const ranks = Object.keys(pr).filter(k=>Number(pr[k])>0);
         const rows = ranks.length>1 ? ranks.map(k=>`<span class="pz-chip">${medals[k]||'🏅'} ${window.app.coinHtml(pr[k])}</span>`).join('') : '';
         return { big:window.app.coinHtml(m.prize||0), lbl: ranks.length>1 ? 'Total Prize' : (pm==='match_win' ? ((m.teamSize||1)>1?'Team Prize':'Match Win') : '1st Prize'), rows };
@@ -127,13 +155,15 @@ Object.assign(window.app, {
             const img=m.img||window.gameArt.banner(m);
             let targetMs=0, timeDisplay="TBD";
             if(m.startTime){ targetMs=m.startTime.seconds?m.startTime.seconds*1000:new Date(m.startTime).getTime(); timeDisplay=done?`<span>${window.app._fmtDT(m.startTime)}</span>`:`<span class="countdown-timer" data-target="${targetMs}">Loading...</span>`; }
-            let btnAction=(joined||done)?"":(full?"":`window.app.checkLogin(() => window.app.openJoin('${m.id}'))`);
+            const _me=joined?(m.participants||[]).find(x=>x.uid===window.db.user_uid):null;
+            const needSlot=!!(joined && _me && !_me.slot && !(Array.isArray(_me.slots)&&_me.slots.length) && !done && m.status!=='live');
+            let btnAction=needSlot?`window.app.resumeSlot('${m.id}')`:((joined||done)?"":(full?"":`window.app.checkLogin(() => window.app.openJoin('${m.id}'))`));
             const fmt=window.app._formatLabel(m);
             const pi=window.app._prizeInfo(m);
             const locked = !joined && !done && (m.status==='live' || !!m.hasPassword);
             const geoLocked = !locked && !joined && !done && !!m.locked;     // paid match in a state where payment is hidden -> free matches only
-            const btnStyle = (full||joined||locked||geoLocked||done)?'background:#e2e8f0; color:#64748b; box-shadow:none;':'';
-            const btnLabel = done?'COMPLETED':joined?'JOINED ✅':geoLocked?'<i class="fa-solid fa-shield-halved"></i> FREE MATCHES ONLY':locked?'<i class="fa-solid fa-lock"></i> MATCH STARTED — TRY NEXT MATCH':full?'FULL':'JOIN NOW';
+            const btnStyle = (full||(joined&&!needSlot)||locked||geoLocked||done)?'background:#e2e8f0; color:#64748b; box-shadow:none;':'';
+            const btnLabel = done?'COMPLETED':needSlot?'🎯 CHOOSE YOUR SLOT':joined?'JOINED ✅':geoLocked?'<i class="fa-solid fa-shield-halved"></i> FREE MATCHES ONLY':locked?'<i class="fa-solid fa-lock"></i> MATCH STARTED — TRY NEXT MATCH':full?'FULL':'JOIN NOW';
             const btnClick = (locked||done)?'':geoLocked?'window.app.showGeoMsg()':btnAction;
             const btnDisabled = (locked||done)?'disabled':'';
             const code = m.matchCode || m.id.slice(0,8).toUpperCase();

@@ -3,7 +3,7 @@
  * not by total wallet. Players with 0 winnings are not listed.
  * Data: lb/{d|w|m}-{key}.players = { uid: { n: name, a: amount } }  (written by the admin panel when prizes are credited)
  */
-import { api } from '../../js/core/api.js?v=2d72097ddc';
+import { api } from '../../js/core/api.js?v=684982f88b';
 
 const pad = (n) => String(n).padStart(2, '0');
 const ymd = (d) => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());

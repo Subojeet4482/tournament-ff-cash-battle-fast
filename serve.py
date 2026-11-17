@@ -5,6 +5,7 @@ import http.server, socketserver
 class H(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.split("?")[0].rstrip("/") in ("/terms", "/terms-of-service", "/tos"): self.path = "/terms.html"   # same as vercel.json
+        if self.path.split("?")[0].rstrip("/") == "/proof": self.path = "/proof.html" + (("?" + self.path.split("?",1)[1]) if "?" in self.path else "")
         super().do_GET()
     def end_headers(self):
         self.send_header("Cache-Control", "no-store, max-age=0")

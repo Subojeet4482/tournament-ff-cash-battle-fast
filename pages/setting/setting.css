@@ -79,3 +79,14 @@ body.dark .ep-pills .priv-pill { background:rgba(148,163,184,.18); color:#cbd5e1
 
 .ep-sec .ep-sub { display:block; margin:10px 2px 0; text-align:left; line-height:1.45; word-break:break-word; }
 .ep-sec .ep-row { flex-wrap:wrap; } .ep-sec .ep-row > span { flex:1 1 auto; min-width:0; }
+
+.rules-secs { display:flex; gap:6px; overflow-x:auto; margin-bottom:10px; padding-bottom:4px; scrollbar-width:none; }
+.rules-secs::-webkit-scrollbar { display:none; }
+.rules-sec { flex:0 0 auto; border:1.5px solid var(--border, #e2e8f0); background:transparent; color:var(--text-muted); padding:7px 11px; border-radius:20px; font-weight:800; font-size:.76rem; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.rules-sec i { margin-right:3px; }
+.rules-sec.on { background:var(--primary); border-color:var(--primary); color:#fff; }
+.rules-box { max-height:52vh; overflow-y:auto; }
+.join-rules { margin:6px 0 10px; border:1.5px solid var(--border, #e2e8f0); border-radius:12px; padding:8px 12px; font-size:.78rem; }
+.join-rules summary { font-weight:800; color:var(--primary); cursor:pointer; }
+.join-rules .jr-h { font-weight:800; margin:8px 0 2px; }
+.join-rules ol { margin:0; padding-left:18px; line-height:1.5; max-height:34vh; overflow-y:auto; }

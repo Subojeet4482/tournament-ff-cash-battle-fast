@@ -3,8 +3,8 @@
  * user card (World -> Message), and reply notifications in World.
  * Works on top of chat.js / chat-ui.js / chat-keep.js through window.chat.
  */
-import * as core from './chat.js?v=2d72097ddc';
-import { api } from '../../js/core/api.js?v=2d72097ddc';
+import * as core from './chat.js?v=684982f88b';
+import { api } from '../../js/core/api.js?v=684982f88b';
 
 const { S, esc, avatar, getProf, sheet, sheetClose, toast, isFriend, friendName, alive } = core;
 const $ = (id) => document.getElementById(id);

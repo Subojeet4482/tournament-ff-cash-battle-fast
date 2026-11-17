@@ -1,6 +1,6 @@
 /* Home page: filter chips + match cards */
 .match-card { background:var(--bg-card); margin:0 20px 25px; border-radius:20px; box-shadow:0 10px 25px -5px rgba(0,0,0,0.06); border:1px solid var(--border); overflow:hidden; }
-.match-banner { height:140px; width:100%; position:relative; overflow:hidden; background:#eee; }
+.match-banner { height:200px; width:100%; position:relative; overflow:hidden; background:#eee; }
 .match-banner img { width:100%; height:100%; object-fit:cover; }
 .match-banner::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:60%; background:linear-gradient(to top,rgba(0,0,0,0.8),transparent); }
 .card-badge { position:absolute; top:12px; padding:5px 12px; border-radius:30px; font-size:0.75rem; font-weight:700; z-index:2; backdrop-filter:blur(4px); }
@@ -91,3 +91,41 @@
 .mv-btn.active { color:var(--primary); }
 .mv-thumb { position:absolute; top:4px; bottom:4px; left:4px; width:calc(50% - 4px); background:#fff; border-radius:11px; box-shadow:0 3px 10px rgba(0,0,0,.08); transition:transform .35s cubic-bezier(.34,1.3,.64,1); }
 .mv-seg[data-active="completed"] .mv-thumb { transform:translateX(100%); }
+
+.pz-card { height:22px; width:auto; vertical-align:-6px; margin-right:4px; filter:drop-shadow(0 2px 3px rgba(80,20,120,.35)); }
+.pz-chip .pz-card { height:18px; vertical-align:-5px; margin-right:3px; }
+.rw-list { margin:10px 0 2px; border:1px dashed #e9d5ff; background:#faf5ff; border-radius:14px; padding:6px 12px; }
+.rw-li { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:6px 0; font-size:.8rem; border-bottom:1px dashed #ede9fe; }
+.rw-li:last-child { border-bottom:0; }
+.rw-li span { font-weight:700; color:#6b21a8; }
+.rw-li b { display:inline-flex; align-items:center; font-weight:800; color:#1f2937; }
+.rw-li .pz-card { height:26px; }
+
+
+/* ===== Home: About section (visible text for players and for Google) ===== */
+.home-about { margin:22px 14px 26px; padding:18px 16px; background:var(--bg-card,#fff); border:1px solid var(--border,#e6e9f0); border-radius:18px; line-height:1.55; font-size:.88rem; color:var(--text-main,#1b2030); text-align:left; }
+.home-about h1 { font-size:1.15rem; line-height:1.3; margin:0 0 8px; font-weight:800; }
+.home-about h2 { font-size:.98rem; margin:18px 0 6px; font-weight:800; }
+.home-about p { margin:0 0 8px; }
+.home-about .ha-lead { font-size:.92rem; }
+.home-about ol, .home-about ul { margin:0 0 6px; padding-left:20px; }
+.home-about li { margin-bottom:5px; }
+.home-about a { color:#4f46e5; font-weight:700; text-decoration:underline; }
+.home-about details { border:1px solid var(--border,#e6e9f0); border-radius:12px; padding:9px 12px; margin-bottom:8px; background:var(--bg-input,#f4f6fb); }
+.home-about summary { cursor:pointer; font-weight:700; }
+.home-about details p { margin:8px 0 0; color:var(--text-muted,#667085); }
+.home-about .ha-links { margin-top:14px; font-weight:700; text-align:center; }
+body.dark .home-about a { color:#a5b4fc; }
+
+
+/* About block: one slim collapsed row (content stays in the page and opens on tap) */
+.home-about { margin:12px 14px 18px; padding:0; background:none; border:0; border-radius:0; }
+.home-about .ha-main { margin:0; padding:0; background:var(--bg-card,#fff); border:1px solid var(--border,#e6e9f0); border-radius:14px; overflow:hidden; }
+.home-about .ha-main > summary { list-style:none; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 14px; font-size:.78rem; font-weight:700; color:var(--text-muted,#667085); cursor:pointer; }
+.home-about .ha-main > summary::-webkit-details-marker { display:none; }
+.home-about .ha-main > summary::after { content:"\25BE"; font-size:.9rem; transition:transform .2s; }
+.home-about .ha-main[open] > summary::after { transform:rotate(180deg); }
+.home-about .ha-main[open] > summary { border-bottom:1px solid var(--border,#e6e9f0); }
+.home-about .ha-main > :not(summary) { margin-left:14px; margin-right:14px; }
+.home-about .ha-main > h1 { margin-top:14px; }
+.home-about .ha-main > .ha-links { margin-bottom:14px; }

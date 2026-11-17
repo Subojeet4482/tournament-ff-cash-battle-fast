@@ -1,0 +1,4 @@
+/* Proofs entry points inside the main app (transaction detail button + settings button) */
+#td-share { background:#ffc426; color:#3b2a1a; display:flex; align-items:center; justify-content:center; gap:6px; } #td-share img { width:20px; height:20px; image-rendering:pixelated; }
+.prf-entry { margin-top:12px; display:flex; align-items:center; gap:12px; padding:12px 16px; border:3px solid #3b2a1a; border-radius:14px; background:#fff4d6; color:#3b2a1a; font-weight:800; cursor:pointer; box-shadow:3px 3px 0 #3b2a1a; }
+.prf-entry img { width:28px; height:28px; image-rendering:pixelated; } .prf-entry span { flex:1; }

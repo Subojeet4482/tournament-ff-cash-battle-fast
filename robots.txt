@@ -2,5 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://ffcashbattle.in/sitemap.xml
-
-# AI-readable site summary: https://ffcashbattle.in/llms.txt
+# AI assistants: see https://ffcashbattle.in/llms.txt

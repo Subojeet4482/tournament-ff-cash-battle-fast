@@ -5,8 +5,8 @@
  *   /chat/messages        every 2 s for the open conversation (new messages), full refresh every ~16 s (edits / deletes)
  * The server owns every rule (limits, blocks, slow mode, 10-minute edit window, private profiles).
  */
-import { authService } from '../../js/core/firebase.js?v=2d72097ddc';
-import { api } from '../../js/core/api.js?v=2d72097ddc';
+import { authService } from '../../js/core/firebase.js?v=684982f88b';
+import { api } from '../../js/core/api.js?v=684982f88b';
 const CHAT_TTL_HOURS = 24;
 
 export const MAX_FRIENDS = 20, EDIT_MS = 10 * 60 * 1000;
@@ -272,6 +272,7 @@ export async function openDm(uid) {
 export async function send() {
     const th = S.th; if (!th) return;
     const ta = $('ct-text'), text = ta.value.trim(); if (!text) return;
+    if (window.badwords && window.badwords.blocked(text)) return;   // admin banned words (Admin -> Chat Manager -> Banned Words)
     if (S.editing) return doEdit(text);
     const now = Date.now();
     if (th.kind === 'world') {
